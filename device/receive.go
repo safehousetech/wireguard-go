@@ -506,7 +506,7 @@ func (peer *Peer) RoutineSequentialReceiver(maxBatchSize int) {
 				device.log.Verbosef("Packet with invalid IP version from %v", peer)
 				continue
 			}
-
+			peer.countBlocked(elem.packet)
 			bufs = append(bufs, elem.buffer[:MessageTransportOffsetContent+len(elem.packet)])
 		}
 		if len(bufs) > 0 {

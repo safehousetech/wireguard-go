@@ -29,3 +29,17 @@ clean:
 	rm -f wireguard-go
 
 .PHONY: all clean test install generate-version-and-build
+
+up: WG_QUICK_USERSPACE_IMPLEMENTATION=$(CURDIR)/wireguard-go
+up: ENV_WG_PROCESS_FOREGROUND=1
+up: LOG_LEVEL=debug
+up:
+	sudo WG_QUICK_USERSPACE_IMPLEMENTATION=$(WG_QUICK_USERSPACE_IMPLEMENTATION) \
+	ENV_WG_PROCESS_FOREGROUND=$(ENV_WG_PROCESS_FOREGROUND) \
+	LOG_LEVEL=$(LOG_LEVEL) \
+	wg-quick up wg0
+
+down:
+	 sudo wg-quick down wg0
+
+.PHONY: up down
