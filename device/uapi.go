@@ -119,6 +119,7 @@ func (device *Device) IpcGetOperation(w io.Writer) error {
 				sendf("last_handshake_time_nsec=%d", nano)
 				sendf("tx_bytes=%d", peer.txBytes.Load())
 				sendf("rx_bytes=%d", peer.rxBytes.Load())
+				sendf("blocked=%d", peer.blocked.Load())
 				sendf("persistent_keepalive_interval=%d", peer.persistentKeepaliveInterval.Load())
 
 				device.allowedips.EntriesForPeer(peer, func(prefix netip.Prefix) bool {

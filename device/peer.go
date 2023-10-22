@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"golang.zx2c4.com/wireguard/conn"
+	"golang.zx2c4.com/wireguard/dns"
 )
 
 type Peer struct {
@@ -26,6 +27,7 @@ type Peer struct {
 	txBytes           atomic.Uint64  // bytes send to peer (endpoint)
 	rxBytes           atomic.Uint64  // bytes received from peer
 	lastHandshakeNano atomic.Int64   // nano seconds since epoch
+	blocked           atomic.Uint64  // counter for connections blocked
 
 	disableRoaming bool
 
@@ -273,4 +275,10 @@ func (peer *Peer) SetEndpointFromPacket(endpoint conn.Endpoint) {
 	peer.Lock()
 	peer.endpoint = endpoint
 	peer.Unlock()
+}
+
+func (peer *Peer) countBlocked(packet []byte) {
+	if dns.IsDNS(packet) && dns.IsBlockedDNSResponse(packet) {
+		peer.blocked.Add(1)
+	}
 }
