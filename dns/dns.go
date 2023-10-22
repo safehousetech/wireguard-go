@@ -35,7 +35,7 @@ func IsBlockedDNSResponse(packet []byte) bool {
 	var p dnsmessage.Parser
 	// we check by Rcode
 	if hh, err := p.Start(packet[:]); err != nil ||
-		hh.RCode != dnsmessage.RCodeRefused {
+		hh.RCode != dnsmessage.RCodeNameError {
 		return false
 	}
 	return true
